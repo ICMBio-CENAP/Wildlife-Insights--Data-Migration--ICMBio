@@ -5,9 +5,18 @@
 library(tidyverse)
 library(here)
 
+# source files
+source(here("Transformation_Code", "Generic_Functions", "generate-spatial-distributions.R"))
+source(here("Transformation_Code", "Generic_Functions", "time-lag.R"))
+
+
 # read file
 jamari <- read.csv(here("Datasets", "jamari", "Wild_ID_FLONA_JAMARI_2016_updated.csv"))
 attach(jamari)
+
+# check if lat long are OK
+check.coord(jamari)
+
 
 # create "Image" file from csv
 Image <- tibble("Project ID" = "FNJ", "Deployment ID" = Camera.Trap.Name, 

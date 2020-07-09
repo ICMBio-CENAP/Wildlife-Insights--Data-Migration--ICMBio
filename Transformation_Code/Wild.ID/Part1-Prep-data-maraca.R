@@ -5,8 +5,17 @@
 library(tidyverse)
 library(here)
 
+# source files
+source(here("Transformation_Code", "Generic_Functions", "generate-spatial-distributions.R"))
+source(here("Transformation_Code", "Generic_Functions", "time-lag.R"))
+
 # read file
 maraca <- read.csv(here("Datasets", "maraca", "esecmaraca_team_2018_raw data_final.csv"))
+
+# check if lat long are OK
+check.coord(maraca)
+
+# attach for next steps
 attach(maraca)
 
 # create "Image" file from csv

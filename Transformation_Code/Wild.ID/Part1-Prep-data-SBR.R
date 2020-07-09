@@ -5,8 +5,41 @@
 library(tidyverse)
 library(here)
 
+# source files
+source(here("Transformation_Code", "Generic_Functions", "generate-spatial-distributions.R"))
+source(here("Transformation_Code", "Generic_Functions", "time-lag.R"))
+
+
 # read file
 sbr <- read.csv(here("Datasets", "Sao-Benedito-River", "Wild_ID_SBR_2017.csv"))
+
+# check if lat long are OK
+check.coord(sbr)
+
+# check date errors
+sbr$Camera.End.Date <- as.Date(sbr$Camera.End.Date, format="%Y-%m-%d")
+sbr$Camera.Start.Date <- as.Date(sbr$Camera.Start.Date, format="%Y-%m-%d")
+sbr$Photo.Date <- as.Date(sbr$Photo.Date, format="%Y-%m-%d")
+
+min(sbr$Camera.Start.Date); max(sbr$Camera.End.Date)
+min(sbr$Photo.Date); max(sbr$Photo.Date)
+
+# fix wrong end date using max photo date
+for(i in 1:nrow(sbr)){ 
+  if (sbr$Camera.End.Date[i] > max(sbr$Photo.Date)) {
+    df1 <- subset(sbr, Camera.Trap.Name == sbr$Camera.Trap.Name[i])
+    max <- max(df1$Photo.Date)
+    sbr$Camera.End.Date[i] <-  max
+  }
+}
+sort(unique(sbr$Camera.Start.Date)) # check, OK
+min(sbr$Camera.Start.Date); max(sbr$Camera.End.Date)
+
+# check time lag between start and end and first and last photos
+time.lag(sbr) # check, everything Ok
+
+
+# attach for the following steps
 attach(sbr)
 
 # create "Image" file from csv
