@@ -1,7 +1,9 @@
 # Wildlife-Insights----Data-Migration-ICMBio
 Code to get the ICMBio data into the format required to be uploaded into Wildlife Insights
 
-This code was adapted from the original repository: ** Wildlife-Insights----Data-Migration **
+This code was adapted from the original repository [Wildlife-Insights----Data-Migration](https://github.com/ConservationInternational/Wildlife-Insights----Data-Migration) from Conservation International
+
+The following lines are taken from the original Readme:
 
 This GitHub repository contains code that will assist current and future Wildlife Insights data providers to get their data into the format required to be uploaded into Wildlife Insights. The [Wildlife Insights Batch Upload Template Data Dictionaries](https://docs.google.com/spreadsheets/d/1iEcHs0Y49W5hx7aoMSFge_1-Q_VfMdl8d56x27heuNY/edit#gid=862413563) contain the guidelines for creating these templates. All code examples in this repository end up producing these templates.  If you need help with any of this please contact us at info@wildlifeinsights.org. We definitely _do not_ want data transformation to be a barrier to getting your data into Wildlife Insights. 
 
