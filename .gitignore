@@ -3,6 +3,8 @@
 *.csv
 *.xls
 *.xlsx
+*.Rhistory
+
 
 # But descent into directories
 !*/
