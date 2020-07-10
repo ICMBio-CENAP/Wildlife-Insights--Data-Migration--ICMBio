@@ -255,6 +255,25 @@ cam_bu <- cam_bu %>% replace(., is.na(.), "")
 dep_bu <- dep_bu %>% replace(., is.na(.), "")
 image_bu <- image_bu %>% replace(., is.na(.), "")
 
+## for jamari 2016 only: a quick fix to file locations:
+  # read coordinate dataset
+  coords <- read.csv(here("Datasets", "jamari", "jamari_tabela_coordenadas_conservacao.csv"))
+  names(coords) <- c("latGMS", "longGMS", "Latitude", "Longitude", "deployment_id", "Camera.Trap.Name.2016", "Camera.Trap.Name.2017")
+  coords$deployment_id <- paste("CT", coords$deployment_id, sep="-")
+  coords$Camera.Trap.Name.2016 <- paste("CT", coords$Camera.Trap.Name.2016, sep="-")
+  newdf <- coords[,c("deployment_id", "Camera.Trap.Name.2016")]
+  newdf <- newdf[1:45,]
+  image_bu <- left_join(image_bu, newdf, by = "deployment_id")
+    for(i in 1:nrow(image_bu)) {
+      image_bu$location[i] <- gsub(as.character(image_bu$deployment_id[i]), as.character(image_bu$Camera.Trap.Name.2016[i]), image_bu$location[i])
+    }
+  image_bu <- image_bu[,-23]
+  View(image_bu) # check
+  
+  # Cameras in image_bu but not in the bucket: 1267, 1365, 1689 (1593 and 1594 found)
+  # cameras in the bucket but not in images_bu: 1367, 1595
+  # cam 181 and 257 are assigned as 1593 in 2016?!! probably similar errors 
+
 # Write out the 4 csv files for required for Batch Upload. 
 # This directory needs to be uploaded to the Google Cloud with the filenames named exactly
 # as written below. They have to be called: projects.csv, cameras.csv,deployments.csv,images.csv
