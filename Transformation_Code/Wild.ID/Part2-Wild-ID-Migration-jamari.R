@@ -240,7 +240,7 @@ image_bu$individual_id <- images_taxa$`Individual ID`
 image_bu$individual_animal_notes <- images_taxa$`Individual Animal Notes`
 image_bu$highlighted <- NA
 image_bu$color <- NA
-image_bu$identified_by <- "Paula Conde" # images_taxa$`Photo Type Identified by`
+image_bu$identified_by <- images_taxa$`Photo Type Identified by`
 # Get a clean site name first - no whitespaces
 site_name_clean <- gsub(" ","_",prj_bu$project_name)
 site_name_clean <- paste(site_name_clean,"_wi_batch_upload",sep="")

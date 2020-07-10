@@ -1,5 +1,5 @@
 # code to get csv export from wild.ID into Wildlife insights format
-# written by Elildo CArvalho Jr, 2020-06-06
+# written by Elildo Carvalho Jr, 2020-06-06
 
 # load libraries
 library(tidyverse)
@@ -12,10 +12,15 @@ source(here("Transformation_Code", "Generic_Functions", "time-lag.R"))
 
 # read file
 jamari <- read.csv(here("Datasets", "jamari", "Wild_ID_FLONA_JAMARI_2016_updated.csv"))
-attach(jamari)
+
+# fix site names and coordinates
+source(here("Transformation_Code", "Generic_Functions", "fix-coordinates-jamari-2016.R"))
 
 # check if lat long are OK
 check.coord(jamari)
+
+# attach for next steps
+attach(jamari)
 
 
 # create "Image" file from csv
@@ -31,7 +36,7 @@ write.csv(Image, here("Datasets", "jamari", "Image.csv"), row.names = FALSE)
 
 
 # create "Deployment" file from csv
-Deployment <- tibble("Deployment ID" = paste("jamari", Camera.Trap.Name, sep="_"), "Event Name" = 2017,
+Deployment <- tibble("Deployment ID" = paste("jamari", Camera.Trap.Name, sep="_"), "Event Name" = 2016,
                      "Array Name (Optional)" = substr(Camera.Trap.Name, 1, stop = 8),"Depolyment Location ID" = Camera.Trap.Name,
                      "Longitude Resolution" = Longitude, "Latitude Resolution" = Latitude, 
                      "Camera Deployment Begin Date" = Camera.Start.Date, "Camera Deployment End Date" = Camera.End.Date,
