@@ -4,7 +4,6 @@
 
 # read table with correct coordinates
 coords <- read.csv(here("Datasets", "jamari", "jamari_tabela_coordenadas_conservacao.csv"))
-names(coords) <- c("latGMS", "longGMS", "Latitude", "Longitude", "Camera.Trap.Name", "Camera.Trap.Name.2016", "Camera.Trap.Name.2017")
 coords$Camera.Trap.Name <- paste("CT", coords$Camera.Trap.Name, sep="-")
 coords$Camera.Trap.Name.2016 <- paste("CT", coords$Camera.Trap.Name.2016, sep="-")
 #attach(coords)

@@ -268,7 +268,7 @@ image_bu <- image_bu %>% replace(., is.na(.), "")
       image_bu$location[i] <- gsub(as.character(image_bu$deployment_id[i]), as.character(image_bu$Camera.Trap.Name.2016[i]), image_bu$location[i])
     }
   image_bu <- image_bu[,-23]
-  View(image_bu) # check
+  #View(image_bu) # check
   
   # Cameras in image_bu but not in the bucket: 1267, 1365, 1689 (1593 and 1594 found)
   # cameras in the bucket but not in images_bu: 1367, 1595
