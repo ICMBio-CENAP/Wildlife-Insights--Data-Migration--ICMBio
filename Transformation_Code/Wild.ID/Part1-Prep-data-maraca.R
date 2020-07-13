@@ -19,9 +19,9 @@ check.coord(maraca)
 attach(maraca)
 
 # create "Image" file from csv
-Image <- tibble("Project ID" = "EEM", "Deployment ID" = substr(cts.id, start=9, stop = 20), 
-                "Image ID" = image.id,
-                "Location" =  paste(cts.id, Raw.Name, sep="/"), 
+Image <- tibble("Project ID" = "EEM", "Deployment ID" = Camera.Trap.Name, 
+                "Image ID" = paste(Camera.Trap.Name, Raw.Name, sep="_"),
+                "Location" =  paste(Camera.Trap.Name, Raw.Name, sep="/"), 
                 "Photo Type" =  Photo.Type, "Photo Type Identified by" =  Person.Identifying.the.Photo,
                 "Genus Species" = paste(Genus, Species, sep=" "), "Uncertainty" = NA,
                 "IUCN Identification Number" = NA, "Date_Time Captured" = paste(Photo.Date, Photo.time, sep=" "),

@@ -1,5 +1,9 @@
-# check the time lag between start date and 1st photo, last photo and end date
-# if lag is too large there is still something wrong in dates, fix by redefining start and end dates 
+# Function to check the time lag between start date and 1st photo, last photo and end date
+# Elildo Carvalho Jr, ICMBio/CENAP, 2020-06-07
+
+# if lag is too large there is prpbably something wrong in start or end dates
+# or the camera failed before the end of the sampling
+# if that happens, fix by redefining start and end dates 
 
 time.lag <- function(data){
   df <- data.frame(matrix(NA, nrow = length(unique(data$Camera.Trap.Name)), ncol = 3))
