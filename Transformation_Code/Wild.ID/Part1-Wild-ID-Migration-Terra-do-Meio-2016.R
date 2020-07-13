@@ -38,32 +38,11 @@ source(here("Transformation_Code", "Generic_Functions", 'generate-spatial-distri
 dir_path <- paste(here("Datasets", "Terra do Meio"), "/", sep="")
 
 # Load Wild.ID export 1
-images_1 <- read_excel(paste(dir_path,"Wild_ID_TDM.xlsx",sep=""),sheet="Image")
-deployments_1 <- read_excel(paste(dir_path,"Wild_ID_TDM.xlsx",sep=""),sheet="Deployment")
-cameras_1 <- read_excel(paste(dir_path,"Wild_ID_TDM.xlsx",sep=""),sheet="Cameras")
-projects_1 <- read_excel(paste(dir_path,"Wild_ID_TDM.xlsx",sep=""),sheet="Project")
+images <- read_excel(paste(dir_path,"Wild_ID_TDM.xlsx",sep=""),sheet="Image")
+deployments <- read_excel(paste(dir_path,"Wild_ID_TDM.xlsx",sep=""),sheet="Deployment")
+cameras <- read_excel(paste(dir_path,"Wild_ID_TDM.xlsx",sep=""),sheet="Cameras")
+projects <- read_excel(paste(dir_path,"Wild_ID_TDM.xlsx",sep=""),sheet="Project")
 
-  # in TDM 2016 there is no export 2 so:
-  images <- images_1
-  deployments <- deployments_1
-  cameras <- cameras_1
-  projects <- projects_1
-
-
-####
-# Load Wild.ID export 2
-#images_2 <- read_excel(paste(dir_path,"original_dataset/CafeFaunaAMPeru_Wild_ID_ALM2_Wild_ID_ALM2.xlsx",sep=""),sheet="Image")
-#deployments_2 <- read_excel(paste(dir_path,"original_dataset/CafeFaunaAMPeru_Wild_ID_ALM2_Wild_ID_ALM2.xlsx",sep=""),sheet="Deployment")
-#cameras_2 <- read_excel(paste(dir_path,"original_dataset/CafeFaunaAMPeru_Wild_ID_ALM2_Wild_ID_ALM2.xlsx",sep=""),sheet="Cameras")
-#projects_2 <- read_excel(paste(dir_path,"original_dataset/CafeFaunaAMPeru_Wild_ID_ALM2_Wild_ID_ALM2.xlsx",sep=""),sheet="Project")
-
-# Merge these exports together because they are one project. Many camera trapping
-# projects may be just one project in Wild.iD
-#projects_1 <- projects_1[1,]
-#projects <- projects_1
-#images <- rbind(images_1,images_2)
-#deployments <- rbind(deployments_1,deployments_2)
-#cameras <- rbind(cameras_1,cameras_2)
 
 ####
 # Handle any data irregularities
@@ -200,6 +179,8 @@ dep_bu$sensor_orientation  <- "Parallel"
 dep_bu$orientation_other  <- NA
 dep_bu$recorded_by <- NA
 
+# check coordinates
+check.coord.WI.format(dep_bu)
 
 ######
 # Image Batch Upload Template: Fill in the information related to each image
@@ -210,8 +191,8 @@ dep_bu$recorded_by <- NA
 # Load in your clean taxonomy. Clean taxononmy is created using the WI_Taxonomy.R file.
   #your_taxa <- read.csv(paste(dir_path,"taxonomic_mapping_template_ALM.csv",sep=""),sep=";", colClasses = "character",strip.white = TRUE,na.strings="")
   #your_taxa <- read.csv(paste(dir_path,"taxonomic_mapping_FNS.csv",sep=""),sep="", colClasses = "character",strip.white = TRUE,na.strings="")
-  source("WI_Taxonomy.R")
-  source("elildo_create_taxonomic_mapping.R")
+  source(here("WI_Global_Taxonomy", "WI_Taxonomy.R"))  
+  source(here("WI_Global_Taxonomy", "create-taxonomic-mapping-TDM.R"))
   your_taxa <- mapping.template
   #your_taxa <- as_tibble(your_taxa) # not sure if this is needed, if not remove later
   
@@ -294,8 +275,8 @@ image_bu <- image_bu %>% replace(., is.na(.), "")
 # Write out the 4 csv files for required for Batch Upload. 
 # This directory needs to be uploaded to the Google Cloud with the filenames named exactly
 # as written below. They have to be called: projects.csv, cameras.csv,deployments.csv,images.csv
-write.csv(prj_bu,file=paste(dir_path,site_name_clean,"/","projects.csv",sep=""), row.names = FALSE)
-write.csv(cam_bu,file=paste(dir_path,site_name_clean,"/","cameras.csv",sep=""),row.names = FALSE)
-write.csv(dep_bu,file=paste(dir_path,site_name_clean,"/","deployments.csv",sep=""),row.names = FALSE)
-write.csv(image_bu,file=paste(dir_path,site_name_clean,"/","images.csv",sep=""),row.names = FALSE)
+write.csv(prj_bu,file=here("batch-upload", site_name_clean, "projects.csv",sep=""), row.names = FALSE)
+write.csv(cam_bu,file=here("batch-upload", site_name_clean, "cameras.csv",sep=""),row.names = FALSE)
+write.csv(dep_bu,file=here("batch-upload", site_name_clean, "deployments.csv",sep=""),row.names = FALSE)
+write.csv(image_bu,file=here("batch-upload", site_name_clean, "images.csv",sep=""),row.names = FALSE)
 

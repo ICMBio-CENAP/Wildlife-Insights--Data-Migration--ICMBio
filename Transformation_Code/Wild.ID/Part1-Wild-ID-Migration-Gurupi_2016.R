@@ -49,9 +49,6 @@ projects_1 <- read_excel(paste(dir_path,"Wild_ID_RBG.xlsx",sep=""),sheet="Projec
   cameras <- cameras_1
   projects <- projects_1
 
-# check coordinates
-check.coord.WI.format(deployments)
-
 ####
 # Load Wild.ID export 2
 #images_2 <- read_excel(paste(dir_path,"original_dataset/CafeFaunaAMPeru_Wild_ID_ALM2_Wild_ID_ALM2.xlsx",sep=""),sheet="Image")
@@ -171,6 +168,9 @@ dep_bu$height_other  <- NA
 dep_bu$sensor_orientation  <- "Parallel"
 dep_bu$orientation_other  <- NA
 dep_bu$recorded_by <- NA
+
+# check coordinates
+#check.coord.WI.format(dep_bu)
 
 
 ######

@@ -2,8 +2,38 @@
 original_gs <- data.frame(unique(images[7]))
 original_gs <- na.omit(original_gs) # remove an NA
 # Fix some names so they are compatible with the WI global taxonomy
-#original_gs[original_gs == "Canis lupus familiaris"] <- "Canis lupus"
-#original_gs[original_gs == "Puma yagouaroundi"] <- "Herpailurus yagouaroundi"
+original_gs[original_gs == "Campephilus unknown"] <- "Campephilus"
+original_gs[original_gs == "Cathartes unknown"] <- "Cathartes"
+original_gs[original_gs == "Chamaeza unknown"] <- "Chamaeza"
+original_gs[original_gs == "Crypturellus unknown"] <- "Crypturellus"
+#Dasycercus unknown
+original_gs[original_gs == "Dactylomys unknown"] <- "Dactylomys"
+original_gs[original_gs == "Dasyprocta unknown"] <- "Dasyprocta ruatanica"
+original_gs[original_gs == "Dasypus unknown"] <- "Dasypus"
+original_gs[original_gs == "Geotrygon unknown"] <- "Geotrygon"
+original_gs[original_gs == "Formicarius unknown"] <- "Formicarius"
+original_gs[original_gs == "Leopardus unknown"] <- "Leopardus"
+original_gs[original_gs == "Leptotila unknown"] <- "Leptotila"
+original_gs[original_gs == "Mazama unknown"] <- "Mazama"
+original_gs[original_gs == "Mitu tomentosum"] <- "Mitu tuberosum"
+original_gs[original_gs == "Mitu unknown"] <- "Mitu tuberosum"
+original_gs[original_gs == "Monasa unknown"] <- "Monasa"
+original_gs[original_gs == "Myrmoborus unknown"] <- "Myrmoborus" 
+original_gs[original_gs == "Neopmorphus unknown"] <- "Neopmorphus" 
+original_gs[original_gs == "Pauxi unknown"] <- "Mitu tuberosum"
+original_gs[original_gs == "Penelope unknown"] <- "Penelope"
+original_gs[original_gs == "Proechimys unknown"] <- "Proechimys"
+#Proedromys unknown
+original_gs[original_gs == "Psophia unknown"] <- "Psophia viridis"
+original_gs[original_gs == "Puma unknown"] <- "Puma"
+original_gs[original_gs == "Rhegmatorhina unknown"] <- "Rhegmatorhina"
+original_gs[original_gs == "Saimiri unknown"] <- "Saimiri"
+original_gs[original_gs == "Cebus apella"] <- "Sapajus apella"
+original_gs[original_gs == "Sciurus unknown"] <- "Sciurus aestuans"
+original_gs[original_gs == "Tigrisoma unknown"] <- "Tigrisoma"
+original_gs[original_gs == "Tinamus unknown"] <- "Tinamus"
+
+
 
 names(original_gs) <- NULL
 
@@ -60,4 +90,4 @@ names(non.spp)
 names(mapping.template)
 
 # write template as csv
-#write.csv(m, here("WI_Global_Taxonomy", "taxonomic_mapping_RBG_2016.csv"))
+#write.csv(m, "taxonomic_mapping_TDM_2016.csv")

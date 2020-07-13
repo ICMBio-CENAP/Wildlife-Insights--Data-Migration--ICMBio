@@ -42,7 +42,7 @@ check.coord <- function(data) {
 # Adapted from a previous script by Jorge Ahumada
 # Elildo Carvalho Jr @ ICMBio/CENAP, 2020-04-02
 
-### Generate spatial distributions for WI format exports
+### Generate spatial distributions for dep_bu files
 check.coord.WI.format <- function(data) {
   
   ##----- 1 - Load libraries-----
@@ -52,18 +52,18 @@ check.coord.WI.format <- function(data) {
   ##-----2 - Generate spatial distributions -----
   
   # Start with provide the lon/lat range of the data
-  lon <- range(data$'Longitude Resolution', na.rm=T)
-  lat <- range(data$'Latitude Resolution', na.rm=T)
+  lon <- range(data$longitude, na.rm=T)
+  lat <- range(data$latitude, na.rm=T)
   
   # Extract the unique lat/lons and put them on a data frame
-  locations.data <- unique(cbind(as.character(data$'Deployment ID'), data$'Latitude Resolution', data$'Longitude Resolution'))
+  locations.data <- unique(cbind(as.character(data$placename), data$latitude, data$longitude))
   
   locations.data <- data.frame(Camera.Trap.Name = locations.data[,1], Latitude = as.numeric(locations.data[,2]), Longitude = as.numeric(locations.data[,3]))
   
   locations.data <- dplyr::arrange(locations.data, Camera.Trap.Name)
   
   # If you have internet: Download the map from google
-  map <- get_map(location = c(c(as.numeric(lon[1]),as.numeric(lat[1])),c(as.numeric(lon[2]),as.numeric(lat[2]))), zoom = 10, source = "google", maptype = "terrain")
+  map <- get_map(location = c(c(as.numeric(lon[1]),as.numeric(lat[1])),c(as.numeric(lon[2]),as.numeric(lat[2]))), zoom = 12, source = "google", maptype = "terrain")
   
   # Plot the locations of Camera traps
   ggmap(map, extent = "normal", maprange = T) + geom_point(data=locations.data, aes(x = Longitude, y = Latitude), colour="black", size = 0.1)
