@@ -13,7 +13,7 @@ source(here("Transformation_Code", "Generic_Functions", "time-lag.R"))
 maraca <- read.csv(here("Datasets", "maraca", "esecmaraca_team_2018_raw data_final_expanded version.csv"))
 
 # check if lat long are OK
-check.coord(maraca)
+#check.coord(maraca)
 
 # attach for next steps
 attach(maraca)
@@ -38,7 +38,7 @@ write.csv(Image, here("Datasets", "maraca", "Image.csv"), row.names = FALSE)
 Deployment <- tibble("Deployment ID" = paste("Maraca", substr(cts.id, 9, nchar(cts.id)), sep="_"), "Event Name" = 2018,
                     "Array Name (Optional)" = substr(cts.id, 9, 16),"Deployment Location ID" = substr(cts.id, 9, nchar(cts.id)),
                     "Longitude Resolution" = lon, "Latitude Resolution" = lat, 
-                    "Camera Deployment Begin Date" = as.Date(start.date, format = "%d/%m/%Y"), "Camera Deployment End Date" = as.Date(end.date, format="%d/%m/%Y"),
+                    "Camera Deployment Begin Date" = start.date, "Camera Deployment End Date" = end.date,
                     "Bait Type" = "No Bait", "Bait Description" = NA, "Feature Type" = NA,
                     "Feature Type Methodology" = NA, "Camera ID" =  camtrap.serial, "Quiet Period Setting" = NA,
                     "Restriction on Access" = NA, "Camera Failure Details" = NA,  "Camera Hardware Failure" = NA)
