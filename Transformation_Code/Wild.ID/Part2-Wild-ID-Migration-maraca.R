@@ -153,7 +153,8 @@ dep_bu$height_other  <- NA
 dep_bu$sensor_orientation  <- "Parallel"
 dep_bu$orientation_other  <- NA
 dep_bu$recorded_by <- NA
-
+#View(dep_bu)
+dep_bu[9,6] <- "2018-12-16" # (end date for this camera was missing)
 
 ######
 # Image Batch Upload Template: Fill in the information related to each image
