@@ -38,8 +38,10 @@ source(here("Transformation_Code", "Generic_Functions", 'wi_functions.R'))
 dir_path <- paste(here("Datasets", "maraca"), "/", sep="")
 
 # Load Wild.ID export
-images <- read.csv(here("Datasets", "maraca", "Image.csv"))
-source(here("Transformation_Code", "Generic_Functions", 'maraca-sub-directories.R'))
+#images <- read.csv(here("Datasets", "maraca", "Image.csv"))
+  # use instead modified images
+  images <- read.csv(here("Datasets", "maraca", "maraca_2018_fixed_locations.csv"))
+  #source(here("Transformation_Code", "Generic_Functions", 'maraca-sub-directories.R'))
 deployments <- read.csv(here("Datasets", "maraca", "Deployment.csv"))
 cameras <- read.csv(here("Datasets", "maraca", "Cameras.csv"))
 projects <- read.csv(here("Datasets", "maraca", "Project.csv"))
@@ -169,9 +171,9 @@ dep_bu$recorded_by <- NA
   
 
 #Create a join column that accounts for both species and non-species labels from your 
-your_taxa$join_taxa <- as.character(your_taxa$original_gs)
+your_taxa$join_taxa <- your_taxa$original_gs
+your_taxa$join_taxa <- as.character(your_taxa$join_taxa)
 #your_taxa <- your_taxa %>% add_column(join_taxa = your_taxa$original_gs)
-
 
 # Add in the non-species original names
 your_taxa$join_taxa[which(!is.na(your_taxa$Your_nonspecies))] <-  your_taxa$Your_nonspecies[which(!is.na(your_taxa$Your_nonspecies))]
@@ -188,7 +190,8 @@ your_taxa$join_taxa[which(!is.na(your_taxa$Your_nonspecies))] <-  your_taxa$Your
   images$join_taxa[images$join_taxa==" "] <- NA
   images$join_taxa[images$join_taxa==""] <- NA
   images$join_taxa <- factor(images$join_taxa)
-  #images$join_taxa[which(is.na(images$join_taxa))] <- as.character(images$`Photo Type`[which(is.na(images$join_taxa))])
+  images$join_taxa <- as.character(images$join_taxa)
+  images$join_taxa[which(is.na(images$join_taxa))] <- as.character(images$`Photo Type`[which(is.na(images$join_taxa))])
 
 # Join the WI taxonomy back into the images dataframe.
   images_taxa <- left_join(images,your_taxa,by="join_taxa")
