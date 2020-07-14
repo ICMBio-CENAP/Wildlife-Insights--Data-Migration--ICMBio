@@ -39,6 +39,7 @@ dir_path <- paste(here("Datasets", "maraca"), "/", sep="")
 
 # Load Wild.ID export
 images <- read.csv(here("Datasets", "maraca", "Image.csv"))
+source(here("Transformation_Code", "Generic_Functions", 'maraca-sub-directories.R'))
 deployments <- read.csv(here("Datasets", "maraca", "Deployment.csv"))
 cameras <- read.csv(here("Datasets", "maraca", "Cameras.csv"))
 projects <- read.csv(here("Datasets", "maraca", "Project.csv"))
@@ -179,13 +180,15 @@ your_taxa$join_taxa[which(!is.na(your_taxa$Your_nonspecies))] <-  your_taxa$Your
 # Do the same with the images dataframe
   images$join_taxa <- images$`Genus Species`
   # do same fixes as in creat-taxonomic-mapping
+  # Fix some names so they are compatible with the WI global taxonomy
   levels(images$join_taxa)[levels(images$join_taxa)=="Puma yagouaroundi"] <- "Herpailurus yagouaroundi"
-  #levels(images$join_taxa)[levels(images$join_taxa)=="Psophia unknown"] <- "Psophia dextralis"
-  levels(images$join_taxa)[levels(images$join_taxa)=="Cebus kaapori"] <- "Cebus unknown"
-  images$join_taxa <- as.character(images$join_taxa)
+  levels(images$join_taxa)[levels(images$join_taxa)=="Cebus olivaceus"] <- "Cebus"
+  levels(images$join_taxa)[levels(images$join_taxa)=="Cebus apella"] <- "Sapajus apella"
+  levels(images$join_taxa)[levels(images$join_taxa)=="Homo sapiens - Researcher"] <- "Homo sapiens"
   images$join_taxa[images$join_taxa==" "] <- NA
   images$join_taxa[images$join_taxa==""] <- NA
-  images$join_taxa[which(is.na(images$join_taxa))] <- as.character(images$`Photo Type`[which(is.na(images$join_taxa))])
+  images$join_taxa <- factor(images$join_taxa)
+  #images$join_taxa[which(is.na(images$join_taxa))] <- as.character(images$`Photo Type`[which(is.na(images$join_taxa))])
 
 # Join the WI taxonomy back into the images dataframe.
   images_taxa <- left_join(images,your_taxa,by="join_taxa")

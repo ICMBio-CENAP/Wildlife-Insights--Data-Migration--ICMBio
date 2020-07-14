@@ -41,21 +41,18 @@ names(m) <- c("original_gs","Your_genus","Your_species","Your_nonspecies","class
 m$original_gs <- original_gs
 m$Your_genus <- df$genus
 m$Your_species <- df$species
+m$class <- as.character(m$class)
+m$order <- as.character(m$order)
+m$family <- as.character(m$family)
+m$genus <- as.character(m$genus)
+m$species <- as.character(m$species)
+m$commonNameEnglish <- as.character(m$commonNameEnglish)
 #m <- m[-1,]
 #View(m)
 
 
-
-nrow(m)
-original_gs[1]
-m[88,]
-
-
-
-
 for(i in 1:nrow(m)){
   df1 <- filter(wi_taxa_data, genus == as.character(m[i,2]) & species == as.character(m[i,3]))
-  if(df1$genus != "Homo") {
     m[i,1] <- original_gs[i,1]
     m[i,5] <- df1$class
     m[i,6] <- df1$order
@@ -65,6 +62,7 @@ for(i in 1:nrow(m)){
     m[i,10] <- df1$commonNameEnglish
     m[i,11] <- df1$uniqueIdentifier
   }
+
   else {
     m[i,1] <- original_gs[i,1]
     m[i,5] <- df1$class[4]
