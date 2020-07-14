@@ -10,7 +10,7 @@ source(here("Transformation_Code", "Generic_Functions", "generate-spatial-distri
 source(here("Transformation_Code", "Generic_Functions", "time-lag.R"))
 
 # read file
-maraca <- read.csv(here("Datasets", "maraca", "esecmaraca_team_2018_raw data_final.csv"))
+maraca <- read.csv(here("Datasets", "maraca", "esecmaraca_team_2018_raw data_final_expanded version.csv"))
 
 # check if lat long are OK
 check.coord(maraca)
