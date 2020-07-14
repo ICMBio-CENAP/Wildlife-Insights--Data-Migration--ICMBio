@@ -214,7 +214,7 @@ images_taxa <- filter(images_taxa, !is.na(uniqueIdentifier))
 # Handle any windows directory backslashes
 images_taxa$new_location <- gsub("\\\\","/",images_taxa$Location)
   #images_taxa$wi_path <- paste("gs://cameratraprepo-vcm/CafeFaunaAMPeru/Wild_ID_",images_taxa$`Project ID`,"/",images_taxa$new_location,sep="")
-  images_taxa$wi_path <- paste("gs://icmbio/maraca/2016","/",images_taxa$new_location,sep="")
+  images_taxa$wi_path <- paste("gs://icmbio/maraca/2018","/",images_taxa$new_location,sep="")
 
 # If all images were identified by one person, set this here. Otherwise comment this out.
 #image_identified_by <- "Paula Conde"
