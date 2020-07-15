@@ -17,8 +17,6 @@
 #      wi_taxonomy.R code to download a dataframe of all WI taxonomy and the unique identifiers.
 # 4. Validate your batch upload files by contacting info@wildlifeinsights.org.
 
-# set wd
-#setwd("C:/Users/ICMBio/R/silvania")
 
 # Clear all variables
 (list = ls())
@@ -39,9 +37,9 @@ dir_path <- paste(here("Datasets", "maraca"), "/", sep="")
 
 # Load Wild.ID export
 #images <- read.csv(here("Datasets", "maraca", "Image.csv"))
-  # use instead modified images
-  images <- read.csv(here("Datasets", "maraca", "maraca_2018_fixed_locations.csv"))
-  #source(here("Transformation_Code", "Generic_Functions", 'maraca-sub-directories.R'))
+  # instead of original images file, use this modified version
+  images <- read.csv(here("Datasets", "maraca", "maraca_2018_images_fix.csv"))
+  #source(here("Transformation_Code", "Generic_Functions", 'maraca-sub-directories-ThisWORKS.R'))
 deployments <- read.csv(here("Datasets", "maraca", "Deployment.csv"))
 cameras <- read.csv(here("Datasets", "maraca", "Cameras.csv"))
 projects <- read.csv(here("Datasets", "maraca", "Project.csv"))
@@ -127,10 +125,11 @@ dep_temp<-distinct(deployments,`Deployment ID`,.keep_all = TRUE )
 
 # 3. Get the empty deployement dataframe
 dep_bu <- wi_batch_function("Deployment",nrow(dep_temp))
+
 # 4. Fill in the deployment batch upload template
 dep_bu$project_id <- unique(prj_bu$project_id) # If more than one error for now
 dep_bu$deployment_id <- dep_temp$`Deployment ID`
-dep_bu$placename <- dep_temp$`Depolyment Location ID`
+dep_bu$placename <- dep_temp$`Deployment Location ID`
 dep_bu$longitude <- dep_temp$`Longitude Resolution`
 dep_bu$latitude <- dep_temp$`Latitude Resolution`
 dep_bu$start_date <- dep_temp$new_begin

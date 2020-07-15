@@ -33,13 +33,13 @@ source(here("Transformation_Code", "Generic_Functions", 'wi_functions.R'))
 # Set the directory path. This is relative to this Github repo. If you have cloned or 
 # downloaded the repo it should work. If used outside of the repo you will need to modify this.
 
-dir_path <- paste(here("Datasets", "Gurupi_2016"), "/", sep="")
+dir_path <- paste(here("Datasets", "Terra do Meio"), "/", sep="")
 
 # Load Wild.ID export
-images <- read.csv(here("Datasets", "Gurupi_2016", "Image.csv"))
-deployments <- read.csv(here("Datasets", "Gurupi_2016", "Deployment.csv"))
-cameras <- read.csv(here("Datasets", "Gurupi_2016", "Cameras.csv"))
-projects <- read.csv(here("Datasets", "Gurupi_2016", "Project.csv"))
+images <- read.csv(here("Datasets", "Terra do Meio", "Image.csv"))
+deployments <- read.csv(here("Datasets", "Terra do Meio", "Deployment.csv"))
+cameras <- read.csv(here("Datasets", "Terra do Meio", "Cameras.csv"))
+projects <- read.csv(here("Datasets", "Terra do Meio", "Project.csv"))
 
 # fix colnames (use spaces instead of periods)
 colnames(images) <- gsub("\\.", " ", colnames(images))
@@ -68,9 +68,9 @@ prj_bu <- wi_batch_function("Project",dep_length)
 
 # Many of the project variables may not be found in your dataset. If you can get them from your
 # data great! Otherwise type them in here. 
-prj_bu$project_id <- "RBG" # projects$`Project ID`
+prj_bu$project_id <- "TDM" # projects$`Project ID`
 #prj_bu$project_name <- projects$`Project Name`
-prj_bu$project_name <- "Gurupi"
+prj_bu$project_name <- "Terra do Meio"
 prj_bu$project_objectives <- "Long-term wildlife monitoring"
 prj_bu$project_species <- "Multiple" # Multiple or Single Species
 prj_bu$project_species_individual  <- NA # If single list out the species (Genus species and comma separated)
@@ -124,7 +124,7 @@ dep_temp<-distinct(deployments,`Deployment ID`,.keep_all = TRUE )
 dep_bu <- wi_batch_function("Deployment",nrow(dep_temp))
 # 4. Fill in the deployment batch upload template
 dep_bu$project_id <- unique(prj_bu$project_id) # If more than one error for now
-dep_bu$deployment_id <- gsub("RBG_2016_", "", dep_temp$`Deployment ID`)
+dep_bu$deployment_id <- gsub("TDM_", "", dep_temp$`Deployment ID`)
 dep_bu$placename <- dep_temp$`Deployment Location ID`
 dep_bu$longitude <- dep_temp$`Longitude Resolution`
 dep_bu$latitude <- dep_temp$`Latitude Resolution`
@@ -160,7 +160,7 @@ dep_bu$recorded_by <- NA
   #your_taxa <- read.csv(paste(dir_path,"taxonomic_mapping_template_ALM.csv",sep=""),sep=";", colClasses = "character",strip.white = TRUE,na.strings="")
   #your_taxa <- read.csv(paste(dir_path,"taxonomic_mapping_FNS.csv",sep=""),sep="", colClasses = "character",strip.white = TRUE,na.strings="")
   source(here("WI_Global_Taxonomy", "WI_Taxonomy.R"))  
-  source(here("WI_Global_Taxonomy", "create-taxonomic-mapping-RBG.R"))
+  source(here("WI_Global_Taxonomy", "create-taxonomic-mapping-TDM.R"))
   your_taxa <- mapping.template
   #your_taxa <- as_tibble(your_taxa) # not sure if this is needed, if not remove later
   
@@ -178,12 +178,14 @@ your_taxa$join_taxa[which(!is.na(your_taxa$Your_nonspecies))] <-  your_taxa$Your
   images$join_taxa <- images$`Genus Species`
   # do same fixes as in creat-taxonomic-mapping
   # Fix some names so they are compatible with the WI global taxonomy
+  levels(images$join_taxa)[levels(images$join_taxa)=="Dasyprocta unknown"] <- "Dasyprocta ruatanica"
+  levels(images$join_taxa)[levels(images$join_taxa)=="Mitu tomentosum"] <- "Mitu tuberosum"
+  levels(images$join_taxa)[levels(images$join_taxa)=="Mitu unknown"] <- "Mitu tuberosum"
+  levels(images$join_taxa)[levels(images$join_taxa)=="Pauxi unknown"] <- "Mitu tuberosum"
+  levels(images$join_taxa)[levels(images$join_taxa)=="Psophia unknown"] <- "Psophia viridis"
+  levels(images$join_taxa)[levels(images$join_taxa)=="Cebus apella"] <- "Sapajus apella"
+  levels(images$join_taxa)[levels(images$join_taxa)=="Sciurus unknown"] <- "Sciurus aestuans"
   levels(images$join_taxa)[levels(images$join_taxa)=="Puma yagouaroundi"] <- "Herpailurus yagouaroundi"
-  levels(images$join_taxa)[levels(images$join_taxa)=="Psophia unknown"] <- "Psophia obscura"
-  levels(images$join_taxa)[levels(images$join_taxa)=="Psophia viridis"] <- "Psophia obscura"
-  levels(images$join_taxa)[levels(images$join_taxa)=="Dasypus sp"] <- "Dasypus unknown"
-  levels(images$join_taxa)[levels(images$join_taxa)=="Crypturellus sp"] <- "Crypturellus unknown"
-  levels(images$join_taxa)[levels(images$join_taxa)=="Tachyphonus luctuosus"] <- "Sakesphorus luctuosus"
   images$join_taxa[images$join_taxa==" "] <- NA
   images$join_taxa[images$join_taxa==""] <- NA
   images$join_taxa <- factor(images$join_taxa)
@@ -210,7 +212,7 @@ images_taxa <- filter(images_taxa, !is.na(uniqueIdentifier))
 # Handle any windows directory backslashes
 images_taxa$new_location <- gsub("\\\\","/",images_taxa$Location)
   #images_taxa$wi_path <- paste("gs://cameratraprepo-vcm/CafeFaunaAMPeru/Wild_ID_",images_taxa$`Project ID`,"/",images_taxa$new_location,sep="")
-  images_taxa$wi_path <- paste("gs://icmbio/Gurupi_2016","/", "RBG_2016_",images_taxa$new_location,sep="")
+  images_taxa$wi_path <- paste("gs://icmbio/Terra do Meio","/", "TDM_2016_",images_taxa$new_location,sep="")
 
 # If all images were identified by one person, set this here. Otherwise comment this out.
 #image_identified_by <- "Paula Conde"

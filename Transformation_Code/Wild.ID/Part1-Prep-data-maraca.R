@@ -23,7 +23,7 @@ image.id <- as.character(image.id)
 n_last <- 12 # Specify number of characters to extract (for image ID)
 
 # create "Image" file from csv
-Image <- tibble("Project ID" = "EEM", "Deployment ID" = substr(cts.id, 9, nchar(cts.id)), 
+Image <- tibble("Project ID" = "EEM", "Deployment ID" = paste(substr(cts.id, 9, nchar(cts.id)), start.date), 
                 "Image ID" = substr(image.id, nchar(image.id) - n_last + 1, nchar(image.id)),
                 "Location" =  paste(substr(cts.id, 9, nchar(cts.id)), substr(image.id, nchar(image.id) - n_last + 1, nchar(image.id)), sep="/"), 
                 "Photo Type" =  photo.type, "Photo Type Identified by" =  identification,
@@ -35,7 +35,7 @@ write.csv(Image, here("Datasets", "maraca", "Image.csv"), row.names = FALSE)
 
 
 # create "Deployment" file from csv
-Deployment <- tibble("Deployment ID" = paste("Maraca", substr(cts.id, 9, nchar(cts.id)), sep="_"), "Event Name" = 2018,
+Deployment <- tibble("Deployment ID" = paste(substr(cts.id, 9, nchar(cts.id)), start.date), "Event Name" = 2018,
                     "Array Name (Optional)" = substr(cts.id, 9, 16),"Deployment Location ID" = substr(cts.id, 9, nchar(cts.id)),
                     "Longitude Resolution" = lon, "Latitude Resolution" = lat, 
                     "Camera Deployment Begin Date" = start.date, "Camera Deployment End Date" = end.date,

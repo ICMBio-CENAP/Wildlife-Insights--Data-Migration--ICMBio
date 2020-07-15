@@ -97,31 +97,27 @@ dim(ct.eem.1.21)
 dim(subset(images, Deployment.ID=="CT-EEM-1-21"))
 
 #-------------------------------------------------------
-## Now join them all in a single dataframe
 
-newLocations <- bind_rows(ct.eem.1.7, ct.eem.1.10, ct.eem.1.16, ct.eem.1.21)
-names(newLocations) <- c("path", "join_field", "Image.ID")
-#newLocations$join_field <- as.factor(newLocations$join_field)
-#View(newLocations)
-
-#-------------------------------------------------------
-# now join this with the images file
 library(stringr)
 images$join_field <- as.character(str_sub(images$Deployment.ID, end=-12))
+images$path <- NA
 
-df1 <- dplyr::left_join(images, newLocations, by=c("Image.ID", "join_field"))
-df1$Location <- as.character(df1$Location)
-View(df1)
+images$path[which(images$join_field == "CT-EEM-1-7")] <- ct.eem.1.7$path
+images$path[which(images$join_field == "CT-EEM-1-10")] <- ct.eem.1.10$path
+images$path[which(images$join_field == "CT-EEM-1-16")] <- ct.eem.1.16$path
+images$path[which(images$join_field == "CT-EEM-1-21")] <- ct.eem.1.21$path
 
-# Finally, replace Locations by new locations in path column
+#View(images)
+images$Location <- as.character(images$Location)
 
-for(i in 1:nrow(df1)) {
-  if(is.na(df1$path[i]) == FALSE) {
-    df1$Location[i] <- df1$path[i]
+for(i in 1:nrow(images)) {
+  if(is.na(images$path[i]) == FALSE) {
+    images$Location[i] <- images$path[i]
   }
   else{}
 }
 
-df2 <- df1[,-17] # remove "path" column
-#write.csv(df2, here("Datasets", "maraca", "maraca_2018_fixed_locations.csv"), row.names = FALSE)
-images <- df2
+images <- images[,-c(17,18)]
+
+# save modified "images"
+write.csv(images, here("Datasets", "maraca", "maraca_2018_images_fix.csv"), row.names = FALSE)
