@@ -93,7 +93,7 @@ attach(juruena)
 
 
 # create "Image" file from csv
-Image <- tibble("Project ID" = "PNJU", "Deployment ID" = Camera.Trap.Name, 
+Image <- tibble("Project ID" = "PNJU", "Deployment ID" = paste(Camera.Trap.Name, Camera.Start.Date), 
                 "Image ID" = paste(Camera.Trap.Name, Raw.Name, sep="_"),
                 "Location" =  paste(Camera.Trap.Name, Raw.Name, sep="/"), 
                 "Photo Type" =  Photo.Type, "Photo Type Identified by" =  Person.Identifying.the.Photo,
@@ -105,7 +105,7 @@ write.csv(Image, here("Datasets", "juruena", "Image.csv"), row.names = FALSE)
 
 
 # create "Deployment" file from csv
-Deployment <- tibble("Deployment ID" = paste("juruena", Camera.Trap.Name, sep="_"), "Event Name" = 2017,
+Deployment <- tibble("Deployment ID" = paste(Camera.Trap.Name, Camera.Start.Date), "Event Name" = 2017,
                      "Array Name (Optional)" = substr(Camera.Trap.Name, 1, stop = 9),"Deployment Location ID" = Camera.Trap.Name,
                      "Longitude Resolution" = Longitude, "Latitude Resolution" = Latitude, 
                      "Camera Deployment Begin Date" = Camera.Start.Date, "Camera Deployment End Date" = Camera.End.Date,

@@ -125,10 +125,11 @@ dep_temp<-distinct(deployments,`Deployment ID`,.keep_all = TRUE )
 
 # 3. Get the empty deployement dataframe
 dep_bu <- wi_batch_function("Deployment",nrow(dep_temp))
+
 # 4. Fill in the deployment batch upload template
 dep_bu$project_id <- unique(prj_bu$project_id) # If more than one error for now
 dep_bu$deployment_id <- sub("juruena_", "", dep_temp$`Deployment ID`)
-dep_bu$placename <- dep_temp$`Depolyment Location ID`
+dep_bu$placename <- dep_temp$`Deployment Location ID`
 dep_bu$longitude <- dep_temp$`Longitude Resolution`
 dep_bu$latitude <- dep_temp$`Latitude Resolution`
 dep_bu$start_date <- dep_temp$new_begin

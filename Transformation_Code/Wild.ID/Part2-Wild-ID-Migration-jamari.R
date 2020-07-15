@@ -17,8 +17,6 @@
 #      wi_taxonomy.R code to download a dataframe of all WI taxonomy and the unique identifiers.
 # 4. Validate your batch upload files by contacting info@wildlifeinsights.org.
 
-# set wd
-#setwd("C:/Users/ICMBio/R/silvania")
 
 # Clear all variables
 rm(list = ls())
@@ -128,7 +126,7 @@ dep_bu <- wi_batch_function("Deployment",nrow(dep_temp))
 # 4. Fill in the deployment batch upload template
 dep_bu$project_id <- unique(prj_bu$project_id) # If more than one error for now
 dep_bu$deployment_id <- dep_temp$`Deployment ID`
-dep_bu$placename <- dep_temp$`Depolyment Location ID`
+dep_bu$placename <- dep_temp$`Deployment Location ID`
 dep_bu$longitude <- dep_temp$`Longitude Resolution`
 dep_bu$latitude <- dep_temp$`Latitude Resolution`
 dep_bu$start_date <- dep_temp$new_begin
@@ -181,7 +179,7 @@ your_taxa$join_taxa[which(!is.na(your_taxa$Your_nonspecies))] <-  your_taxa$Your
   images$join_taxa <- images$`Genus Species`
   # do same fixes as in creat-taxonomic-mapping
   levels(images$join_taxa)[levels(images$join_taxa)=="Puma yagouaroundi"] <- "Herpailurus yagouaroundi"
-  images$join_taxa<-images$join_taxa[!(images$join_taxa=="Mellivora capensis"),]
+  #images$join_taxa<-images$join_taxa[!(images$join_taxa=="Mellivora capensis"),]
   images$join_taxa <- as.character(images$join_taxa)
   images$join_taxa[images$join_taxa==" "] <- NA
   images$join_taxa[images$join_taxa==""] <- NA
