@@ -3,14 +3,15 @@ library(tidyverse)
 # create vector of unique species 
 original_gs <- data.frame(unique(images[7]))
 
-# remove unknown and sp
+# remove unknown and NA
 original_gs$Genus.Species <- gsub("unknown", "", original_gs$Genus.Species)
+original_gs <- original_gs[-c(which(is.na(original_gs))),]
 
 # remove trailing empty spaces
-trimws(original_gs$Genus.Species)
+#trimws(original_gs$Genus.Species)
 
 # convert to factor
-original_gs <- as.factor(original_gs$Genus.Species)
+original_gs <- as.factor(original_gs)
 levels(original_gs)
 
 # remove empty rows
@@ -57,7 +58,7 @@ m$Your_genus <- df$genus
 m$Your_species <- df$species
 
 for(i in 1:nrow(m)){
-#for(i in 1:50){
+#for(i in 1:225){
   df1 <- filter(wi_taxa_data, genus == as.character(m[i,2]) & species == as.character(m[i,3]))
   m[i,1] <- original_gs[i]
   m[i,5] <- as.character(unique(df1$class))

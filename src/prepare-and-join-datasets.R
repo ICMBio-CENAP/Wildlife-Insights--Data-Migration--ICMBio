@@ -5,6 +5,7 @@
 library(tidyverse)
 library(stringr)
 library(here)
+source(here("bin", 'wi_functions.R'))
 
 
 ##----- 2 - read datasets-----
@@ -14,13 +15,14 @@ juruena <- read.csv(here("data", "Wild_ID_PNJU_2016to2019.csv"))
 maraca <- read.csv(here("data", "Wild_ID_maraca_2018.csv"))
 tdm <- read.csv(here("data", "Wild_ID_TDM_2016to2018.csv"))
 #jamari <- read.csv(here("data", "Wild_ID_FNJ_2016to2019.csv")
-silvania <- read.csv(here("data", "Wild_ID_Silvania_2019.csv"))
 sbr <- read.csv(here("data", "Wild_ID_SBR_2017.csv"))
+# silvania: was already exported in WI format. Read it in the end and rbind with the rest
 
 
 ##----- 3 - standardize columns etc in the datasets-----
 
 # Gurupi
+gurupi$Photo.time <- substr(gurupi$td.photo, 12, nchar(gurupi$td.photo))
 gurupi <- gurupi[,c("Camera.Trap.Name", "Project.Name", "Sampling.Event", "Longitude", "Latitude", "Camera.Start.Date", "Camera.End.Date", "Raw.Name", "Photo.Type",
                     "Person.Identifying.the.Photo", "Genus", "Species", "Photo.Date", "Photo.time", "Number.of.Animals",
                     "Camera.Manufacturer", "Camera.Model", "Camera.Serial.Number", "Person.setting.up.the.Camera",
@@ -35,7 +37,7 @@ gurupi$Project.Contact.Email = "elildojr@gmail.com"
 gurupi$Array.Name <- substr(gurupi$Camera.Trap.Name, 1, stop = 8)
 
 #GurupiRoads
-gurupiRoads$Photo.time <- gurupiRoads$Photo.Time
+gurupiRoads$Photo.time <- substr(gurupiRoads$td.photo, 12, nchar(gurupiRoads$td.photo))
 gurupiRoads <- gurupiRoads[,c("Camera.Trap.Name", "Project.Name", "Sampling.Event", "Longitude", "Latitude", "Camera.Start.Date", "Camera.End.Date", "Raw.Name", "Photo.Type",
                     "Person.Identifying.the.Photo", "Genus", "Species", "Photo.Date", "Photo.time", "Number.of.Animals",
                     "Camera.Manufacturer", "Camera.Model", "Camera.Serial.Number", "Person.setting.up.the.Camera",
@@ -66,7 +68,7 @@ juruena$Array.Name <- substr(juruena$Camera.Trap.Name, 1, stop = 9)
 
 
 # maraca
-maraca$Photo.time <- maraca$Photo.Time
+maraca$Photo.time <- substr(maraca$td.photo, 12, nchar(maraca$td.photo))
 maraca <- maraca[,c("Camera.Trap.Name", "Project.Name", "Sampling.Event", "Longitude", "Latitude", "Camera.Start.Date", "Camera.End.Date", "Raw.Name", "Photo.Type",
                     "Person.Identifying.the.Photo", "Genus", "Species", "Photo.Date", "Photo.time", "Number.of.Animals",
                     "Camera.Manufacturer", "Camera.Model", "Camera.Serial.Number", "Person.setting.up.the.Camera",
@@ -99,7 +101,7 @@ tdm$Array.Name <- substr(tdm$Camera.Trap.Name, 1, stop = 8)
 
 
 # sbr
-sbr$Photo.time <- sbr$Photo.Time
+sbr$Photo.time <- substr(sbr$td.photo, 12, nchar(sbr$td.photo))
 sbr <- sbr[,c("Camera.Trap.Name", "Project.Name", "Sampling.Event", "Longitude", "Latitude", "Camera.Start.Date", "Camera.End.Date", "Raw.Name", "Photo.Type",
               "Person.Identifying.the.Photo", "Genus", "Species", "Photo.Date", "Photo.time", "Number.of.Animals",
               "Camera.Manufacturer", "Camera.Model", "Camera.Serial.Number", "Person.setting.up.the.Camera",
@@ -122,7 +124,7 @@ sbr$Array.Name <- substr(sbr$Camera.Trap.Name, 1, stop = 8)
 
 dim(gurupi); dim(gurupiRoads); dim(juruena); dim(maraca); dim(tdm); dim(jamari); dim(silvania); dim(sbr)
 
-#icmbio <- rbind(gurupi, gurupiRoads, juruena, maraca, tdm, jamari, silvania, sbr)
+#icmbio <- rbind(gurupi, gurupiRoads, juruena, maraca, tdm, jamari, sbr)
 icmbio <- rbind(gurupi, gurupiRoads, juruena, maraca, tdm, sbr)
 dim(icmbio)
 
@@ -131,7 +133,6 @@ dim(icmbio)
 attach(icmbio)
 
 # create "Image" file from csv
-# WARNING: Photo.time is inconsistent among datasets. Standardize before proceeding
 Image <- tibble("Project ID" = Project.ID, "Deployment ID" = paste(Camera.Trap.Name, Camera.Start.Date), 
                 "Image ID" = paste(Camera.Trap.Name, Raw.Name, sep="_"),
                 "Location" =  location, 
@@ -140,8 +141,6 @@ Image <- tibble("Project ID" = Project.ID, "Deployment ID" = paste(Camera.Trap.N
                 "IUCN Identification Number" = NA, "Date_Time Captured" = paste(Photo.Date, Photo.time, sep=" "),
                 "Age" = NA,  "Sex" = NA, "Individual ID" = NA,  "Count" =  Number.of.Animals,
                 "Animal recognizable (Y/N)" = NA, "Individual Animal Notes" = NA) 
-write.csv(Image, here("data", "Image.csv"), row.names = FALSE)
-
 
 # create "Deployment" file from csv
 Deployment <- tibble("Deployment ID" = paste(Camera.Trap.Name, Camera.Start.Date), "Event Name" = Sampling.Event,
@@ -152,8 +151,6 @@ Deployment <- tibble("Deployment ID" = paste(Camera.Trap.Name, Camera.Start.Date
                      "Feature Type Methodology" = NA, "Camera ID" =  Camera.Serial.Number, "Quiet Period Setting" = NA,
                      "Restriction on Access" = NA, "Camera Failure Details" = NA,  "Camera Hardware Failure" = NA)
 Deployment <- Deployment %>% distinct(`Deployment ID`, .keep_all = TRUE)
-write.csv(Deployment, here("data", "Deployment.csv"), row.names = FALSE)
-
 
 # create "Cameras" file from csv
 Cameras <- tibble("Project ID" = Project.ID, "Camera ID" = Camera.Serial.Number, 
@@ -161,8 +158,6 @@ Cameras <- tibble("Project ID" = Project.ID, "Camera ID" = Camera.Serial.Number,
                   "Serial Number" = Camera.Serial.Number, "Year Purchased" = 2016)
 
 Cameras <- Cameras %>% distinct(`Camera ID`, .keep_all = TRUE)
-write.csv(Cameras, here("data", "Cameras.csv"), row.names = FALSE)
-
 
 # Create "Project" file from csv 
 Project <- tibble("Project ID" = Project.ID, "Publish Date" = "2020-11-15", "Project Name" = Project.Name,
@@ -172,5 +167,43 @@ Project <- tibble("Project ID" = Project.ID, "Publish Date" = "2020-11-15", "Pro
                   "Country Code" = "BRA",  "Project Data Use and Constraints" = NA)
 Project <- Project %>% distinct(`Project ID`, .keep_all = TRUE)
 
-write.csv(Project, here("data", "Project.csv"), row.names = FALSE)
 
+##----- 5 - Add Silvania-----
+dir_path <- paste(here("data"), "/", sep="")
+
+# Load Wild.ID export Silvania
+images_1 <- read_excel(paste(dir_path,"Wild_ID_FNS.xlsx",sep=""),sheet="Image")
+deployments_1 <- read_excel(paste(dir_path,"Wild_ID_FNS.xlsx",sep=""),sheet="Deployment")
+cameras_1 <- read_excel(paste(dir_path,"Wild_ID_FNS.xlsx",sep=""),sheet="Cameras")
+projects_1 <- read_excel(paste(dir_path,"Wild_ID_FNS.xlsx",sep=""),sheet="Project")
+
+# some edits
+images_1$`Deployment ID` <- paste(gsub("FNS_2019_", "", images_1$`Deployment ID`), "2019", sep=" ")
+deployments_1$`Deployment ID` <- paste(gsub("FNS_2019_", "", deployments_1$`Deployment ID`), "2019", sep=" ")
+deployments_1$`Camera Deployment Begin Date` <- gsub("November", "11", deployments_1$`Camera Deployment Begin Date`)
+deployments_1$`Camera Deployment Begin Date` <- gsub("th", "", deployments_1$`Camera Deployment Begin Date`)
+deployments_1$`Camera Deployment Begin Date` <- gsub("11-8", "11-08", deployments_1$`Camera Deployment Begin Date`)
+deployments_1$`Camera Deployment Begin Date` <- gsub("11-9", "11-09", deployments_1$`Camera Deployment Begin Date`)
+deployments_1$`Camera Deployment End Date` <- gsub("November", "11", deployments_1$`Camera Deployment End Date`)
+deployments_1$`Camera Deployment End Date` <- gsub("December", "12", deployments_1$`Camera Deployment End Date`)
+deployments_1$`Camera Deployment End Date` <- gsub("th", "", deployments_1$`Camera Deployment End Date`)
+deployments_1$`Camera Deployment End Date` <- gsub("rd", "", deployments_1$`Camera Deployment End Date`)
+deployments_1$`Camera Deployment End Date` <- gsub("-7", "-07", deployments_1$`Camera Deployment End Date`)
+deployments_1$`Camera Deployment End Date` <- gsub("-9", "-09", deployments_1$`Camera Deployment End Date`)
+names(deployments_1)[4] <- "Deployment Location ID"
+projects_1$`Project Name` <- "Silvania"
+projects_1$`Project Objectives` <- "Wildlife monitoring"
+projects_1$`Project Owner (Organization or Individual)` <- "ICMBio/CENAP"
+projects_1$`Project Owner Email (if applicable)` <- "mariella.butti@icmbio.gov.br"
+
+# rbind silvania to data from other sites
+Image <- rbind(Image, images_1)
+Project <- rbind(Project, projects_1)
+Deployment <- rbind(Deployment, deployments_1)
+Cameras <- rbind(Cameras, cameras_1)
+
+##----- 5 - save full ICMBio dataset as csv-----
+write.csv(Image, here("data", "Image.csv"), row.names = FALSE)
+write.csv(Deployment, here("data", "Deployment.csv"), row.names = FALSE)
+write.csv(Project, here("data", "Project.csv"), row.names = FALSE)
+write.csv(Cameras, here("data", "Cameras.csv"), row.names = FALSE)
