@@ -115,6 +115,8 @@ sbr$Principal.Investigator.Email <- "elildojr@gmail.com"
 sbr$Project.Contact <- "Elildo Carvalho Jr"
 sbr$Project.Contact.Email = "elildojr@gmail.com"
 sbr$Array.Name <- substr(sbr$Camera.Trap.Name, 1, stop = 8)
+sbr[sbr$Camera.Trap.Name=="CT-SBR-1-22",]$Longitude <- -56.53005
+sbr[sbr$Camera.Trap.Name=="CT-SBR-1-22",]$Latitude <- -9.06317
 
 
 ## WARNING: Silvania and Jamari missing!!!
