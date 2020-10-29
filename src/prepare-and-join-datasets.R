@@ -18,65 +18,159 @@ silvania <- read.csv(here("data", "Wild_ID_Silvania_2019.csv"))
 sbr <- read.csv(here("data", "Wild_ID_SBR_2017.csv"))
 
 
-##----- 3 - join datasets-----
+##----- 3 - standardize columns etc in the datasets-----
+
+# Gurupi
 gurupi <- gurupi[,c("Camera.Trap.Name", "Project.Name", "Sampling.Event", "Longitude", "Latitude", "Camera.Start.Date", "Camera.End.Date", "Raw.Name", "Photo.Type",
                     "Person.Identifying.the.Photo", "Genus", "Species", "Photo.Date", "Photo.time", "Number.of.Animals",
                     "Camera.Manufacturer", "Camera.Model", "Camera.Serial.Number", "Person.setting.up.the.Camera",
-                    "Person.picking.up.the.Camera", "Person.Identifying.the.Photo", "Organization.Name")]
+                    "Person.picking.up.the.Camera", "Person.Identifying.the.Photo", "Organization.Name", "location")]
+
+gurupi$Project.ID <- "RBG"
+gurupi$Owner.Email <- "elildojr@gmail.com"
+gurupi$Principal.Investigator <- "Elildo Carvalho Jr"
+gurupi$Principal.Investigator.Email <- "elildojr@gmail.com"
+gurupi$Project.Contact <- "Elildo Carvalho Jr"
+gurupi$Project.Contact.Email = "elildojr@gmail.com"
+gurupi$Array.Name <- substr(gurupi$Camera.Trap.Name, 1, stop = 8)
+
+#GurupiRoads
+gurupiRoads$Photo.time <- gurupiRoads$Photo.Time
+gurupiRoads <- gurupiRoads[,c("Camera.Trap.Name", "Project.Name", "Sampling.Event", "Longitude", "Latitude", "Camera.Start.Date", "Camera.End.Date", "Raw.Name", "Photo.Type",
+                    "Person.Identifying.the.Photo", "Genus", "Species", "Photo.Date", "Photo.time", "Number.of.Animals",
+                    "Camera.Manufacturer", "Camera.Model", "Camera.Serial.Number", "Person.setting.up.the.Camera",
+                    "Person.picking.up.the.Camera", "Person.Identifying.the.Photo", "Organization.Name", "location")]
+
+gurupiRoads$Project.ID <- "RBG"
+gurupiRoads$Owner.Email <- "elildojr@gmail.com"
+gurupiRoads$Principal.Investigator <- "Elildo Carvalho Jr"
+gurupiRoads$Principal.Investigator.Email <- "elildojr@gmail.com"
+gurupiRoads$Project.Contact <- "Elildo Carvalho Jr"
+gurupiRoads$Project.Contact.Email = "elildojr@gmail.com"
+gurupiRoads$Array.Name <- substr(gurupiRoads$Camera.Trap.Name, 1, stop = 8)
 
 
+# Juruena
+juruena <- juruena[,c("Camera.Trap.Name", "Project.Name", "Sampling.Event", "Longitude", "Latitude", "Camera.Start.Date", "Camera.End.Date", "Raw.Name", "Photo.Type",
+                      "Person.Identifying.the.Photo", "Genus", "Species", "Photo.Date", "Photo.time", "Number.of.Animals",
+                      "Camera.Manufacturer", "Camera.Model", "Camera.Serial.Number", "Person.setting.up.the.Camera",
+                      "Person.picking.up.the.Camera", "Person.Identifying.the.Photo", "Organization.Name", "location")]
 
-dim(gurupi)
-dim(gurupiRoads)
-dim(juruena)
-dim(maraca)
-dim(tdm)
-#dim(jamari)
-dim(silvania)
-dim(sbr)
+juruena$Project.ID <- "PNJU"
+juruena$Owner.Email <- "elildojr@gmail.com"
+juruena$Principal.Investigator <- "Elildo Carvalho Jr"
+juruena$Principal.Investigator.Email <- "elildojr@gmail.com"
+juruena$Project.Contact <- "Elildo Carvalho Jr"
+juruena$Project.Contact.Email = "elildojr@gmail.com"
+juruena$Array.Name <- substr(juruena$Camera.Trap.Name, 1, stop = 9)
 
 
-##----- 4 - Get the csv file into the format required for WI-----
-attach(gurupi)
+# maraca
+maraca$Photo.time <- maraca$Photo.Time
+maraca <- maraca[,c("Camera.Trap.Name", "Project.Name", "Sampling.Event", "Longitude", "Latitude", "Camera.Start.Date", "Camera.End.Date", "Raw.Name", "Photo.Type",
+                    "Person.Identifying.the.Photo", "Genus", "Species", "Photo.Date", "Photo.time", "Number.of.Animals",
+                    "Camera.Manufacturer", "Camera.Model", "Camera.Serial.Number", "Person.setting.up.the.Camera",
+                    "Person.picking.up.the.Camera", "Person.Identifying.the.Photo", "Organization.Name", "location")]
 
+maraca$Project.Name <- "Maraca"
+maraca$Project.ID <- "EEM"
+maraca$Owner.Email <- "elildojr@gmail.com"
+maraca$Principal.Investigator <- "Whaldener Endo"
+maraca$Principal.Investigator.Email <- "neotropical@gmail.com"
+maraca$Project.Contact <- "Bruno Campos Souza"
+maraca$Project.Contact.Email = "bruno-campos.souza@icmbio.gov.br"
+maraca$Array.Name <- substr(maraca$Camera.Trap.Name, 1, stop = 8)
+
+
+# tdm
+tdm <- tdm[,c("Camera.Trap.Name", "Project.Name", "Sampling.Event", "Longitude", "Latitude", "Camera.Start.Date", "Camera.End.Date", "Raw.Name", "Photo.Type",
+                    "Person.Identifying.the.Photo", "Genus", "Species", "Photo.Date", "Photo.time", "Number.of.Animals",
+                    "Camera.Manufacturer", "Camera.Model", "Camera.Serial.Number", "Person.setting.up.the.Camera",
+                    "Person.picking.up.the.Camera", "Person.Identifying.the.Photo", "Organization.Name", "location")]
+
+tdm$Project.Name <- "Terra-do-Meio"
+tdm$Project.ID <- "TDM"
+tdm$Owner.Email <- "elildojr@gmail.com"
+tdm$Principal.Investigator <- "Elildo Carvalho Jr"
+tdm$Principal.Investigator.Email <- "elildojr@gmail.com"
+tdm$Project.Contact <- "Elildo Carvalho Jr"
+tdm$Project.Contact.Email = "elildojr@gmail.com"
+tdm$Array.Name <- substr(tdm$Camera.Trap.Name, 1, stop = 8)
+
+
+# sbr
+sbr$Photo.time <- sbr$Photo.Time
+sbr <- sbr[,c("Camera.Trap.Name", "Project.Name", "Sampling.Event", "Longitude", "Latitude", "Camera.Start.Date", "Camera.End.Date", "Raw.Name", "Photo.Type",
+              "Person.Identifying.the.Photo", "Genus", "Species", "Photo.Date", "Photo.time", "Number.of.Animals",
+              "Camera.Manufacturer", "Camera.Model", "Camera.Serial.Number", "Person.setting.up.the.Camera",
+              "Person.picking.up.the.Camera", "Person.Identifying.the.Photo", "Organization.Name", "location")]
+
+sbr$Project.Name <- "Sao-Benedito-River"
+sbr$Project.ID <- "SBR"
+sbr$Owner.Email <- "elildojr@gmail.com"
+sbr$Principal.Investigator <- "Elildo Carvalho Jr"
+sbr$Principal.Investigator.Email <- "elildojr@gmail.com"
+sbr$Project.Contact <- "Elildo Carvalho Jr"
+sbr$Project.Contact.Email = "elildojr@gmail.com"
+sbr$Array.Name <- substr(sbr$Camera.Trap.Name, 1, stop = 8)
+
+
+## WARNING: Silvania and Jamari missing!!!
+
+
+##----- 4 - Join datasets in a single object-----
+
+dim(gurupi); dim(gurupiRoads); dim(juruena); dim(maraca); dim(tdm); dim(jamari); dim(silvania); dim(sbr)
+
+#icmbio <- rbind(gurupi, gurupiRoads, juruena, maraca, tdm, jamari, silvania, sbr)
+icmbio <- rbind(gurupi, gurupiRoads, juruena, maraca, tdm, sbr)
+dim(icmbio)
+
+
+##----- 5 - Get the object into the format required for WI-----
+attach(icmbio)
 
 # create "Image" file from csv
-Image <- tibble("Project ID" = "RBG", "Deployment ID" = paste(Camera.Trap.Name, Camera.Start.Date), 
+# WARNING: Photo.time is inconsistent among datasets. Standardize before proceeding
+Image <- tibble("Project ID" = Project.ID, "Deployment ID" = paste(Camera.Trap.Name, Camera.Start.Date), 
                 "Image ID" = paste(Camera.Trap.Name, Raw.Name, sep="_"),
-                "Location" =  paste(Camera.Trap.Name, Raw.Name, sep="/"), 
+                "Location" =  location, 
                 "Photo Type" =  Photo.Type, "Photo Type Identified by" =  Person.Identifying.the.Photo,
                 "Genus Species" = paste(Genus, Species, sep=" "), "Uncertainty" = NA,
                 "IUCN Identification Number" = NA, "Date_Time Captured" = paste(Photo.Date, Photo.time, sep=" "),
                 "Age" = NA,  "Sex" = NA, "Individual ID" = NA,  "Count" =  Number.of.Animals,
                 "Animal recognizable (Y/N)" = NA, "Individual Animal Notes" = NA) 
-write.csv(Image, here("Datasets", "Gurupi_2016", "Image.csv"), row.names = FALSE)
+write.csv(Image, here("data", "Image.csv"), row.names = FALSE)
 
 
 # create "Deployment" file from csv
-Deployment <- tibble("Deployment ID" = paste(Camera.Trap.Name, Camera.Start.Date), "Event Name" = 2016,
-                     "Array Name (Optional)" = substr(Camera.Trap.Name, 1, stop = 8),"Deployment Location ID" = Camera.Trap.Name,
+Deployment <- tibble("Deployment ID" = paste(Camera.Trap.Name, Camera.Start.Date), "Event Name" = Sampling.Event,
+                     "Array Name (Optional)" = Array.Name, "Deployment Location ID" = Camera.Trap.Name,
                      "Longitude Resolution" = Longitude, "Latitude Resolution" = Latitude, 
                      "Camera Deployment Begin Date" = Camera.Start.Date, "Camera Deployment End Date" = Camera.End.Date,
                      "Bait Type" = "No Bait", "Bait Description" = NA, "Feature Type" = NA,
-                     "Feature Type Methodology" = NA, "Camera ID" =  Camera.Serial.Number,"Quiet Period Setting" = NA,
+                     "Feature Type Methodology" = NA, "Camera ID" =  Camera.Serial.Number, "Quiet Period Setting" = NA,
                      "Restriction on Access" = NA, "Camera Failure Details" = NA,  "Camera Hardware Failure" = NA)
-write.csv(Deployment, here("Datasets", "Gurupi_2016", "Deployment.csv"), row.names = FALSE)
+Deployment <- Deployment %>% distinct(`Deployment ID`, .keep_all = TRUE)
+write.csv(Deployment, here("data", "Deployment.csv"), row.names = FALSE)
 
 
 # create "Cameras" file from csv
-Cameras <- tibble("Project ID" = "RBG", "Camera ID" = Camera.Serial.Number, 
+Cameras <- tibble("Project ID" = Project.ID, "Camera ID" = Camera.Serial.Number, 
                   "Make" = Camera.Manufacturer, "Model" = Camera.Model, 
                   "Serial Number" = Camera.Serial.Number, "Year Purchased" = 2016)
 
 Cameras <- Cameras %>% distinct(`Camera ID`, .keep_all = TRUE)
-write.csv(Cameras, here("Datasets", "Gurupi_2016", "Cameras.csv"), row.names = FALSE)
+write.csv(Cameras, here("data", "Cameras.csv"), row.names = FALSE)
 
 
 # Create "Project" file from csv 
-Project <- tibble("Project ID" = "RBG", "Publish Date" = "2020-06-07", "Project Name" = Project.Name,
+Project <- tibble("Project ID" = Project.ID, "Publish Date" = "2020-11-15", "Project Name" = Project.Name,
                   "Project Objectives" = "Long-term wildlife monitoring", "Project Owner (Organization or Individual)" = "ICMBio/CENAP",
-                  "Project Owner Email (if applicable)" = "elildojr@gmail.com",  "Principal Investigator" = "Elildo Carvalho Jr",
-                  "Principal Investigator Email" = "elildojr@gmail.com", "Project Contact" = "Elildo Carvalho Jr",  "Project Contact Email" = "elildojr@gmail.com",
+                  "Project Owner Email (if applicable)" = Owner.Email,  "Principal Investigator" = Principal.Investigator,
+                  "Principal Investigator Email" = Principal.Investigator.Email, "Project Contact" = Project.Contact,  "Project Contact Email" = Project.Contact.Email,
                   "Country Code" = "BRA",  "Project Data Use and Constraints" = NA)
-write.csv(Project, here("Datasets", "Gurupi_2016", "Project.csv"), row.names = FALSE)
+Project <- Project %>% distinct(`Project ID`, .keep_all = TRUE)
+
+write.csv(Project, here("data", "Project.csv"), row.names = FALSE)
 
