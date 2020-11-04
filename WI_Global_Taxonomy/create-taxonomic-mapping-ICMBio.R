@@ -58,7 +58,7 @@ m$Your_genus <- df$genus
 m$Your_species <- df$species
 
 for(i in 1:nrow(m)){
-#for(i in 1:225){
+#for(i in 1:230){
   df1 <- filter(wi_taxa_data, genus == as.character(m[i,2]) & species == as.character(m[i,3]))
   m[i,1] <- original_gs[i]
   m[i,5] <- as.character(unique(df1$class))

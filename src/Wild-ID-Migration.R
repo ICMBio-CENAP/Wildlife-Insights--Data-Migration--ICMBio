@@ -46,7 +46,7 @@ colnames(images) <- gsub("\\.", " ", colnames(images))
 colnames(deployments) <- gsub("\\.", " ", colnames(deployments))
 colnames(cameras) <- gsub("\\.", " ", colnames(cameras))
 colnames(projects) <- gsub("\\.", " ", colnames(projects))
-  
+
 
 ####
 # Handle any data irregularities
@@ -102,7 +102,8 @@ num_sensors <- length(unique(cam_info$`Camera ID`))
 cam_bu <- wi_batch_function("Camera",num_sensors)
 # Fill out each Camera field
 #cam_bu[nrow(cam_bu)+nrow(cameras)-1,] <- NA # add empty rows otherwise following lines do not work
-cam_bu$project_id <- unique(projects$`Project ID`) # If more than one error for now
+#cam_bu$project_id <- unique(projects$`Project ID`) # If more than one error for now
+cam_bu$project_id <- cameras$`Project ID`
 cam_bu$camera_id <- cam_info$`Camera ID`
 cam_bu$make <- cam_info$Make
 cam_bu$model <- cam_info$Model
@@ -124,7 +125,8 @@ dep_temp<-distinct(deployments,`Deployment ID`,.keep_all = TRUE )
 # 3. Get the empty deployement dataframe
 dep_bu <- wi_batch_function("Deployment",nrow(dep_temp))
 # 4. Fill in the deployment batch upload template
-dep_bu$project_id <- unique(prj_bu$project_id) # If more than one error for now
+#dep_bu$project_id <- unique(prj_bu$project_id) # If more than one error for now
+# last line of this chunk has a solution for project_id
 dep_bu$deployment_id <- dep_temp$`Deployment ID`
 dep_bu$placename <- dep_temp$`Deployment Location ID`
 dep_bu$longitude <- dep_temp$`Longitude Resolution`
@@ -149,6 +151,8 @@ dep_bu$height_other  <- NA
 dep_bu$sensor_orientation  <- "Parallel"
 dep_bu$orientation_other  <- NA
 dep_bu$recorded_by <- NA
+dep_bu$project_id <- substr(dep_bu$deployment_id, 4, 6)
+dep_bu$project_id[which(dep_bu$project_id != "RBG" & dep_bu$project_id != "PNJ" & dep_bu$project_id != "EEM" & dep_bu$project_id != "TDM" & dep_bu$project_id != "SBR" & dep_bu$project_id != "FNS")] <- "FNJ"
 
 
 ######
@@ -213,6 +217,8 @@ no_wi <- filter(images_taxa, is.na(uniqueIdentifier))
 # Create a check. If Photo.Type is.na there is an error with these or they have not bee identified.
 images_taxa <- filter(images_taxa, !is.na(uniqueIdentifier))
 
+# Pulling out records that don't have location
+images_taxa <- filter(images_taxa, !is.na(Location))
 
 # 2. Image file path adjustments
 # Change the file path names for your images. Supply what your original path (original_path) with a replacement string (sub_path)
@@ -278,6 +284,7 @@ prj_bu <- prj_bu %>% replace(., is.na(.), "")
 cam_bu <- cam_bu %>% replace(., is.na(.), "")
 dep_bu <- dep_bu %>% replace(., is.na(.), "")
 image_bu <- image_bu %>% replace(., is.na(.), "")
+
 
 # Write out the 4 csv files for required for Batch Upload. 
 # This directory needs to be uploaded to the Google Cloud with the filenames named exactly

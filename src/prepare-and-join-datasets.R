@@ -4,6 +4,7 @@
 ##----- 1 - Load libraries-----
 library(tidyverse)
 library(stringr)
+library(readxl)
 library(here)
 source(here("bin", 'wi_functions.R'))
 
@@ -14,7 +15,7 @@ gurupiRoads <- read.csv(here("data", "Wild_ID_RBG_ROADS_2015to2017_processed.csv
 juruena <- read.csv(here("data", "Wild_ID_PNJU_2016to2019.csv"))
 maraca <- read.csv(here("data", "Wild_ID_maraca_2018.csv"))
 tdm <- read.csv(here("data", "Wild_ID_TDM_2016to2018.csv"))
-#jamari <- read.csv(here("data", "Wild_ID_FNJ_2016to2019.csv")
+jamari <- read.csv(here("data", "Wild_ID_FNJ_2016to2019.csv"))
 sbr <- read.csv(here("data", "Wild_ID_SBR_2017.csv"))
 # silvania: was already exported in WI format. Read it in the end and rbind with the rest
 
@@ -100,6 +101,22 @@ tdm$Project.Contact.Email = "elildojr@gmail.com"
 tdm$Array.Name <- substr(tdm$Camera.Trap.Name, 1, stop = 8)
 
 
+# Jamari
+jamari <- jamari[,c("Camera.Trap.Name", "Project.Name", "Sampling.Event", "Longitude", "Latitude", "Camera.Start.Date", "Camera.End.Date", "Raw.Name", "Photo.Type",
+              "Person.Identifying.the.Photo", "Genus", "Species", "Photo.Date", "Photo.time", "Number.of.Animals",
+              "Camera.Manufacturer", "Camera.Model", "Camera.Serial.Number", "Person.setting.up.the.Camera",
+              "Person.picking.up.the.Camera", "Person.Identifying.the.Photo", "Organization.Name", "location")]
+
+jamari$Project.Name <- "Jamari"
+jamari$Project.ID <- "FNJ"
+jamari$Owner.Email <- "elildojr@gmail.com"
+jamari$Principal.Investigator <- "Elildo Carvalho Jr"
+jamari$Principal.Investigator.Email <- "elildojr@gmail.com"
+jamari$Project.Contact <- "Elildo Carvalho Jr"
+jamari$Project.Contact.Email = "elildojr@gmail.com"
+jamari$Array.Name <- NA
+
+
 # sbr
 sbr$Photo.time <- substr(sbr$td.photo, 12, nchar(sbr$td.photo))
 sbr <- sbr[,c("Camera.Trap.Name", "Project.Name", "Sampling.Event", "Longitude", "Latitude", "Camera.Start.Date", "Camera.End.Date", "Raw.Name", "Photo.Type",
@@ -117,15 +134,14 @@ sbr$Project.Contact.Email = "elildojr@gmail.com"
 sbr$Array.Name <- substr(sbr$Camera.Trap.Name, 1, stop = 8)
 
 
-## WARNING: Silvania and Jamari missing!!!
+## WARNING: Silvania will be added below
 
 
 ##----- 4 - Join datasets in a single object-----
 
 dim(gurupi); dim(gurupiRoads); dim(juruena); dim(maraca); dim(tdm); dim(jamari); dim(silvania); dim(sbr)
 
-#icmbio <- rbind(gurupi, gurupiRoads, juruena, maraca, tdm, jamari, sbr)
-icmbio <- rbind(gurupi, gurupiRoads, juruena, maraca, tdm, sbr)
+icmbio <- rbind(gurupi, gurupiRoads, juruena, maraca, tdm, jamari, sbr)
 dim(icmbio)
 
 
