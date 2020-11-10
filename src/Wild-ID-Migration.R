@@ -172,6 +172,7 @@ dep_bu <- dep_bu[,c("project_id", "deployment_id", "subproject_name", "subprojec
                     "bait_description", "feature_type", "feature_type_methodology",
                     "camera_id", "quiet_period", "camera_functioning", "sensor_height", "height_other",
                     "sensor_orientation", "orientation_other", "recorded_by")]
+dep_bu$project_id <- gsub("PNJ", "PNJU", dep_bu$project_id)
 #View(dep_bu)
 
 ######
