@@ -1,6 +1,6 @@
 # Wild.ID Migration Script
 # Originally written by Eric Fegraus. October 2019
-# Adapted for ICMBio by Elildo Carvalho Jr
+# Adapted for ICMBio by Elildo Carvalho Jr. November 2020
 
 # Purpose: The goal of this script is to load the Wild.ID export and convert it 
 # into the Batch Upload Templates needed to ingest into Wildlife Insights.
@@ -90,9 +90,17 @@ prj_bu$project_admin_email <- projects$`Principal Investigator Email` #projects$
 #prj_bu$project_admin_organization <- "ICMBio/CENAP" #projects$`Project Owner (Organization or Individual)`
 prj_bu$country_code <- "BRA" # projects$`Country Code`
 prj_bu$embargo <- 12 # 0-24 months
+prj_bu$initiative_id <- 2000019
 prj_bu$metadata_license <- "CC-BY" # Two options: CC0,CC-BY
 prj_bu$image_license <- "CC-BY-NC" # Three options: CC0,CC-BY,CC-BY-NC
-
+prj_bu <- prj_bu[,c("project_name", "project_id", "project_short_name", "project_objectives",
+                    "project_species", "project_species_individual", "project_sensor_layout",
+                    "project_sensor_layout_targeted_type", "project_bait_use", "project_bait_type",
+                    "project_stratification", "project_stratification_type", "project_sensor_method",
+                    "project_individual_animals", "project_blank_images", "project_sensor_cluster",
+                    "project_admin", "project_admin_email", "country_code", "embargo", "initiative_id",
+                    "metadata_license", "image_license")]
+#View(prj_bu)
 
 ######
 # Camera Batch Upload Template: Fill in the information relatd to the cameras/sensors used in your project
@@ -132,18 +140,18 @@ dep_bu$deployment_id <- dep_temp$`Deployment ID`
 dep_bu$subproject_name <- NA
 dep_bu$subproject_design <- NA
 dep_bu$placename <- dep_temp$`Deployment Location ID`
-dep_bu$longitude <- dep_temp$`Longitude Resolution`
-dep_bu$latitude <- dep_temp$`Latitude Resolution`
+dep_bu$longitude <- round(dep_temp$`Longitude Resolution`,7)
+dep_bu$latitude <- round(dep_temp$`Latitude Resolution`, 7)
 dep_bu$start_date <- dep_temp$new_begin
 dep_bu$end_date <- dep_temp$new_end
-dep_bu$event_name <- dep_temp$`Event Name`
+dep_bu$event_name <- as.character(dep_temp$`Event Name`)
 dep_bu$event_description <- NA
 dep_bu$event_type <- NA
 #dep_bu$array_name <- dep_temp$`Array Name (Optional)`
 dep_bu$bait_type <- "None" # Note that if bait was used but it was not consistent across all deployments, this is where you enter it. 
 # Logic may be needed to figure out which deployments had bait and which didn't. Similar thing if "bait type" was vaired in deployments.
 # Options: Yes, some, No.  We may need a way to assign this if answer = "some".
-dep_bu$bait_description <- ""
+dep_bu$bait_description <- NA
 dep_bu$feature_type <- dep_temp$`Feature Type` # Road paved, Road dirt, Trail hiking, Trail game, Road underpass, Road overpass, Road bridge, Culvert, Burrow, Nest site, Carcass, Water source, Fruiting tree, Other 
 dep_bu$feature_type[which(is.na(dep_temp$`Feature Type`))] <- "None"
 dep_bu$feature_type_methodology <- NA
@@ -158,7 +166,13 @@ dep_bu$orientation_other  <- NA
 dep_bu$recorded_by <- NA
 dep_bu$project_id <- substr(dep_bu$deployment_id, 4, 6)
 dep_bu$project_id[which(dep_bu$project_id != "RBG" & dep_bu$project_id != "PNJ" & dep_bu$project_id != "EEM" & dep_bu$project_id != "TDM" & dep_bu$project_id != "SBR" & dep_bu$project_id != "FNS")] <- "FNJ"
-
+dep_bu <- dep_bu[,c("project_id", "deployment_id", "subproject_name", "subproject_design",
+                    "placename", "longitude", "latitude", "start_date", "end_date",
+                    "event_name", "event_description", "event_type", "bait_type",
+                    "bait_description", "feature_type", "feature_type_methodology",
+                    "camera_id", "quiet_period", "camera_functioning", "sensor_height", "height_other",
+                    "sensor_orientation", "orientation_other", "recorded_by")]
+#View(dep_bu)
 
 ######
 # Image Batch Upload Template: Fill in the information related to each image
@@ -211,7 +225,7 @@ your_taxa$join_taxa[which(!is.na(your_taxa$Your_nonspecies))] <-  your_taxa$Your
   images$join_taxa[which(is.na(images$join_taxa))] <- as.character(images$`Photo Type`[which(is.na(images$join_taxa))])
 
 # Join the WI taxonomy back into the images dataframe.
-  images_taxa <- left_join(images,your_taxa,by="join_taxa")
+images_taxa <- left_join(images,your_taxa,by="join_taxa")
 
 # Check the taxa
 check <- distinct(images_taxa,class,order,family,genus,species,commonNameEnglish,uniqueIdentifier)
@@ -231,16 +245,16 @@ images_taxa <- filter(images_taxa, !is.na(Location))
 # gs://cameratraprepo-vcm/CafeFaunaAMPeru/Wild_ID_ALM/ALM_2018_249-1/IMG_0001.JPG
 # Handle any windows directory backslashes
 images_taxa$new_location <- gsub("\\\\","/",images_taxa$Location)
-  # create a column with project names as they appear in bucket so we can paste it in new_location
-  images_taxa$bucket_name <- images_taxa$`Project ID` 
-  images_taxa$bucket_name[images_taxa$bucket_name=="RBG"] <- "Gurupi"
-  images_taxa$bucket_name[images_taxa$bucket_name=="PNJU"] <- "Juruena"
-  images_taxa$bucket_name[images_taxa$bucket_name=="EEM"] <- "Maraca"
-  images_taxa$bucket_name[images_taxa$bucket_name=="TDM"] <- "Terra-do-Meio"
-  images_taxa$bucket_name[images_taxa$bucket_name=="SBR"] <- "Sao-Benedito-River"
-  images_taxa$bucket_name[images_taxa$bucket_name=="FNS"] <- "Silvania"
-  images_taxa$bucket_name[images_taxa$bucket_name=="FNJ"] <- "Jamari"
-  images_taxa$wi_path <- paste("gs://icmbio", images_taxa$bucket_name, images_taxa$new_location, sep="/")
+# create a column with project names as they appear in bucket so we can paste it in new_location
+images_taxa$bucket_name <- images_taxa$`Project ID` 
+images_taxa$bucket_name[images_taxa$bucket_name=="RBG"] <- "Gurupi"
+images_taxa$bucket_name[images_taxa$bucket_name=="PNJU"] <- "Juruena"
+images_taxa$bucket_name[images_taxa$bucket_name=="EEM"] <- "Maraca"
+images_taxa$bucket_name[images_taxa$bucket_name=="TDM"] <- "Terra-do-Meio"
+images_taxa$bucket_name[images_taxa$bucket_name=="SBR"] <- "Sao-Benedito-River"
+images_taxa$bucket_name[images_taxa$bucket_name=="FNS"] <- "Silvania"
+images_taxa$bucket_name[images_taxa$bucket_name=="FNJ"] <- "Jamari"
+images_taxa$wi_path <- paste("gs://icmbio", images_taxa$bucket_name, images_taxa$new_location, sep="/")
 
 # If all images were identified by one person, set this here. Otherwise comment this out.
 #image_identified_by <- "Paula Conde"
@@ -311,3 +325,6 @@ write.csv(prj_bu,file=here("batch-upload", "projects.csv"), row.names = FALSE)
 write.csv(cam_bu,file=here("batch-upload", "cameras.csv"),row.names = FALSE)
 write.csv(dep_bu,file=here("batch-upload", "deployments.csv"),row.names = FALSE)
 write.csv(image_bu,file=here("batch-upload", "images.csv"),row.names = FALSE)
+
+# save as Rdata to split sites in another script
+save(prj_bu, cam_bu, dep_bu, image_bu, file=here("data", "icmbio_bu.Rdata"))

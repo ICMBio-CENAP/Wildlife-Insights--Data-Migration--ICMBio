@@ -4,6 +4,7 @@
 *.xls
 *.xlsx
 *.Rhistory
+icmbio_bu.Rdata
 
 
 # But descent into directories
